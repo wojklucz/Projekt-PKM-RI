@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<root date="11/06/15 12:02:02">
+		<Switchers quantity="34">
+			<switcher address="101" mapX="367" mapY="338" orientation="0" state="Left" zone="Wrzeszcz">IN = PKM 1
+OUT_L [p] = PKM 1
+OUT_P = przejazdowka PKM1/PKM2</switcher>
+			<switcher address="102" mapX="695" mapY="395" orientation="180" state="Left" zone="Wrzeszcz">IN = Pzejazdowka PKM 1/PKM 2
+OUT_L = PKM 2
+OUT_R [P] = PKM 1/2</switcher>
+			<switcher address="103" mapX="580" mapY="445" orientation="0" state="Left" zone="Wrzeszcz">IN = PKM 2
+OUT_L = PKM 2
+OUT_R [P] = Przejazdowka PKM 1/ PKM 2</switcher>
+			<switcher address="104" mapX="1310" mapY="295" orientation="180" state="Left" zone="Wrzeszcz">IN = PKM 1
+OUT_L = BOCZ 1
+OUT_P[P] = PKM!</switcher>
+			<switcher address="105" mapX="1395" mapY="295" orientation="0" state="Right" zone="Wrzeszcz">IN = PKM 1
+OUT_L[P] = PKM 1
+OUT_P = przej PKM 1/PKM 2</switcher>
+		<switcher address="106" mapX="1865" mapY="310" orientation="0" state="Right" zone="Wrzeszcz">IN = PKM 1
+OUT_L = BOCZ 3
+OUT_P[P] = PKM 1</switcher>
+		<switcher address="107" mapX="1630" mapY="360" orientation="180" state="Left" zone="Wrzeszcz">REV 
+IN = DAL 1
+OUT_L[P] = PKM 1/2
+OUT_P =  PKM 1</switcher>
+		<switcher address="108" mapX="2095" mapY="410" orientation="0" state="Left" zone="Wrzeszcz">REV
+IN = DAL 1
+OUT_L[P] = PKM 2
+OUT_P = PKM 1</switcher>
+		<switcher address="109" mapX="2295" mapY="400" orientation="0" state="Left" zone="Wrzeszcz">IN = PKM 2
+OUT_L = PKM 1
+OUT_P[P] = DAL 1</switcher>
+		<switcher address="110" mapX="2460" mapY="335" orientation="180" state="Right" zone="Wrzeszcz">IN = Podjazd PKM 1
+OUT_L = PKM 2
+OUT_R [prosto]= PKM 1</switcher>
+			<switcher address="111" mapX="2970" mapY="300" orientation="0" state="Right" zone="Wrzeszcz">IN = PKM 1
+OUT_L = PKM 1
+OUT_R [prosto] = PKM 2</switcher>
+
+<!--################################################################################################################## BOCZ -->
+
+		<switcher address="201" mapX="1930" mapY="205" orientation="180" state="Right" zone="Wrzeszcz">IN = BOCZ 1/2
+OUT_L = BOCZ 1
+OUT_P[P] = BOCZ 2
+</switcher>
+<!--################################################################################################################## DAL -->
+			<switcher address="301" mapX="221" mapY="506" orientation="180" state="Right" zone="Wrzeszcz">IN = DAL 1
+OUT_L [p] = DAL 1
+OUT_P = przejazdowka DAL1/DAL2</switcher>			
+			<switcher address="302" mapX="542" mapY="559" orientation="0" state="Left" zone="Wrzeszcz">IN = DAL1/DAL2
+OUT_L [P] = DAL1/DAL2
+OUT_R = DAL2</switcher>
+			<switcher address="303" mapX="695" mapY="600" orientation="180" state="Left" zone="Wrzeszcz">REV
+IN = PKM Most/ DAL 2
+OUT_L [P] = DAL 2
+OUT_R = przejazdówka DAL 1</switcher>
+			<switcher address="304" mapX="965" mapY="610" orientation="0" state="Left" zone="Wrzeszcz">IN = DAL 2
+OUT_L = DAL 2
+OUT_R [prosto] = PKM most</switcher>
+			<switcher address="305" mapX="1130" mapY="555" orientation="0" state="Right" zone="Wrzeszcz">REV
+IN = przejazd DAL 1
+OUT_P [P] = DAL 1
+OUT_L = przejzad DAL1/ DAL 2
+</switcher>
+			<switcher address="306" mapX="1390" mapY="510" orientation="180" state="Left" zone="Wrzeszcz">REV
+IN =DAL1-&gt;DAL2
+OUT_L = przej DAL1/DAL2
+OUT_R [P] = DAL1</switcher>
+			<switcher address="307" mapX="1675" mapY="490" orientation="0" state="Right" zone="Wrzeszcz">IN = DAL1
+OUT_L = DAL1 
+OUT_R [prosto] =DAL2</switcher>	
+			<switcher address="308" mapX="1785" mapY="445" orientation="180" state="Right" zone="Wrzeszcz">IN = DAL1
+OUT_L = DAL1
+OUT_R [prosto] = PKM 2</switcher>
+			<switcher address="309" mapX="1645" mapY="630" orientation="0" state="Left" zone="Wrzeszcz">REV 
+IN = PKM Most
+OUT_P[P] = DAL 2
+OUT_L = SKM 1</switcher>
+			<switcher address="310" mapX="3315" mapY="385" orientation="180" state="Left" zone="Wrzeszcz">IN = DAL 1
+OUT_L[P] = DAL 1
+OUT_P = DAL 2</switcher>
+			<switcher address="311" mapX="3565" mapY="440" orientation="0" state="Right" zone="Wrzeszcz">REV
+IN = DAL 2
+OUT_L[P] = DAL 2
+OUT_P = DAL 1</switcher>
+
+<!--################################################################################################################## SKM -->
+			<switcher address="501" mapX="356" mapY="685" orientation="180" state="Right" zone="Wrzeszcz">IN = SKM 1 
+OUT_L [P] = SKM 1
+OUT_P = SKM 2</switcher>
+			<switcher address="503" mapX="612" mapY="740" orientation="180" state="Right" zone="Wrzeszcz">IN = SKM 2
+OUT_L [P] = SKM 2
+OUT_P = SKM 1</switcher>
+			<switcher address="504" mapX="809" mapY="739" orientation="0" state="Right" zone="Wrzeszcz">IN = SKM 2
+OUT_L = SKM 1
+OUT_P [P] = SKM 2</switcher>
+			<switcher address="505" mapX="1010" mapY="680" orientation="180" state="Right" zone="Wrzeszcz">REV
+IN = SKM 1
+OUT_L = SKM 2
+OUT_P [P] = SKM 1</switcher>
+		<switcher address="506" mapX="1435" mapY="685" orientation="180" state="Left" zone="Wrzeszcz">IN = SKM 2
+OUT_L = PKM Most
+OUT_P [P] = SKM2 </switcher>
+
+<!--################################################################################################################## Strzyża -->						
+			<switcher address="101" mapX="4785" mapY="345" orientation="120" state="Right" zone="Strzyża">REV
+IN = PKM 2
+OUT_L [P] = PKM Most
+OUT_P = PKM 2</switcher>
+			<switcher address="102" mapX="4865" mapY="145" orientation="100" zone="Strzyża">REV
+IN = PKM 2
+OUT_L[P] = PKM_OSOWA
+OUT_P = PKM 2</switcher>
+<!--################################################################################################################## Kiełpinek -->	
+		<switcher address="1" mapX="0" mapY="0" state="Left" zone="Kiełpinek">IN = Prawy PKM
+OUT_L = Lewy PKM
+OUT_R [prosto] = Prawy PKM</switcher>
+		<switcher address="2" mapX="0" mapY="0" state="Left" zone="Kiełpinek">IN = Lewy PKM
+OUT_L [prosto]= Lewy PKM
+OUT_R = Prawy PKM</switcher>
+		<switcher address="11" mapX="0" mapY="0" state="Left" zone="Kiełpinek">IN = Prawy PKM
+OUT_L = Lewy PKM
+OUT_R [prosto] = Prawy PKM</switcher>
+			<switcher address="12" mapX="0" mapY="0" state="Left" zone="Kiełpinek">IN = Lewy PKM
+OUT_L =  Prawy PKM
+OUT_R [prosto] = Lewy PKM</switcher>
+
+<!--################################################################################################################## Osowa -->	
+		<switcher address="507" mapX="5300" mapY="900" orientation="0" state="Left" zone="Banino">IN = SKM Osowa
+OUT_L = SKM 2
+OUT_P [P] = SKM 1 </switcher>
+
+		<switcher address="312" mapX="4920" mapY="455" orientation="255" state="Left" zone="Banino">IN = PKM Strzyża
+OUT_L = PKM 1 Osowa
+OUT_P [P] = PKM 2 Osowa </switcher>
+
+		<switcher address="313" mapX="5300" mapY="650" orientation="180" state="Left" zone="Banino">IN = PKM Osowa
+OUT_L = PKM 1 Osowa
+OUT_P [P] = PKM 2 Osowa </switcher>
+
+
+
+<!--################################################################################################################## OTHER -->						
+			<switcher address="999" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>			
+			<switcher address="998" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="997" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="996" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="995" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="994" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="993" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>			
+			<switcher address="992" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			
+			<switcher address="991" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="990" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="989" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="988" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="987" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="986" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="985" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="984" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+			<switcher address="983" mapX="0" mapY="0" orientation="0" zone="None">Niepodpięta</switcher>
+		</Switchers>
+		
+		<Balises quantity="38">
+			<balisa address="101" mapX="238" mapY="342" state="[1, 0]" zone="Wrzeszcz">PKM 1</balisa>
+			<balisa address="102" mapX="70" mapY="447" state="[1, 0]" zone="Wrzeszcz">PKM 2</balisa>
+			<balisa address="103" mapX="1265" mapY="440" state="[1, 0]" zone="Wrzeszcz">PKM 2</balisa>
+			<balisa address="104" mapX="1780" mapY="630" state="[17, 0]" zone="Wrzeszcz">PKM Most</balisa>
+			<balisa address="105" mapX="1730" mapY="370" state="[17, 0]" zone="Wrzeszcz">PKM 1</balisa>
+			<balisa address="106" mapX="2185" mapY="330" state="[17, 0]" zone="Wrzeszcz">PKM 1</balisa>
+			<balisa address="108" mapX="2675" mapY="310" state="[17, 0]" zone="Wrzeszcz">PKM 1</balisa>
+			<balisa address="109" mapX="3155" mapY="265" state="[17, 0]" zone="Wrzeszcz">PKM 1</balisa>
+			<balisa address="110" mapX="3155" mapY="310" state="[1, 0]" zone="Wrzeszcz">PKM 2</balisa>
+			
+<!--################################################################################################################## DAL -->			
+			
+			<balisa address="301" mapX="65" mapY="506" state="[17, 0]" zone="Wrzeszcz">DAL 1</balisa>			
+			<balisa address="302" mapX="541" mapY="613" state="[17, 0]" zone="Wrzeszcz">DAL 2</balisa>
+			<balisa address="303" mapX="649" mapY="585" state="[17, 0]" zone="Wrzeszcz">DAL1/DAL2</balisa>
+			<balisa address="304" mapX="1020" mapY="585" state="[17, 0]" zone="Wrzeszcz">DAL1/DAL2</balisa>
+			<balisa address="305" mapX="1230" mapY="495" state="[17, 0]" zone="Wrzeszcz">DAL 1</balisa>
+			<balisa address="306" mapX="1310" mapY="535" state="[17, 0]" zone="Wrzeszcz">DAL 1/ DAL 2</balisa>
+			<balisa address="307" mapX="1745" mapY="475" state="[17, 0]" zone="Wrzeszcz">DAL 1/2</balisa>
+			<balisa address="308" mapX="1870" mapY="510" state="[17, 0]" zone="Wrzeszcz">DAL2</balisa>
+			<balisa address="309" mapX="2460" mapY="390" state="[17, 0]" zone="Wrzeszcz">DAL 1</balisa>
+			
+<!--################################################################################################################## SKM -->			
+			<balisa address="501" mapX="227" mapY="681" state="[1, 0]" zone="Wrzeszcz">SKM 1</balisa>
+			<balisa address="502" mapX="423" mapY="751" state="[1, 0]" zone="Wrzeszcz">SKM 2</balisa>						
+			<balisa address="503" mapX="1800" mapY="760" state="[17, 0]" zone="Wrzeszcz">SKM 2</balisa>
+			<balisa address="504" mapX="1700" mapY="695" state="[17, 0]" zone="Wrzeszcz">SKM 2</balisa>
+			
+<!--################################################################################################################## TEST -->				
+			<balisa address="601" mapX="2440" mapY="710" state="[17, 0]" zone="Wrzeszcz">TEST 1</balisa>
+			<balisa address="602" mapX="2795" mapY="720" state="[17, 0]" zone="Wrzeszcz">TEST 2</balisa>
+			<balisa address="603" mapX="3110" mapY="735" state="[17, 0]" zone="Wrzeszcz">TEST 3</balisa>
+			<balisa address="604" mapX="3440" mapY="740" state="[17, 0]" zone="Wrzeszcz">TEST 4</balisa>
+			<balisa address="605" mapX="3745" mapY="750" state="[17, 0]" zone="Wrzeszcz">TEST 5</balisa>
+			<balisa address="606" mapX="4090" mapY="770" state="[17, 0]" zone="Wrzeszcz">TEST 6</balisa>
+<!--################################################################################################################## OTHER -->	
+			<balisa address="999" mapX="0" mapY="0" state="[1, 0]" zone="None">Niepodpieta</balisa>
+			<balisa address="998" mapX="0" mapY="0" state="[0, 0]" zone="None">Niepodpieta</balisa>
+			<balisa address="995" mapX="0" mapY="0" state="[1, 0]" zone="None">Niepodpieta</balisa>
+			<balisa address="993" mapX="0" mapY="0" state="[0, 0]" zone="None">Niepodpieta</balisa>
+			<balisa address="994" mapX="0" mapY="0" state="[0, 0]" zone="None">Niepodpieta</balisa>
+			<balisa address="993" mapX="0" mapY="0" state="[1, 0]" zone="None">Niepodpieta</balisa>
+			
+<!--################################################################################################################## Strzyża -->							
+			<balisa address="101" mapX="4750" mapY="475" state="[17, 0]" zone="Strzyża">PKM Most</balisa>
+			<balisa address="102" mapX="4890" mapY="345" state="[1, 0]" zone="Strzyża">PKM Osowa</balisa>			
+			<balisa address="103" mapX="4800" mapY="70" state="[17, 0]" zone="Strzyża">PKM 1 Przed</balisa>
+			<balisa address="104" mapX="4880" mapY="70" state="[1, 0]" zone="Strzyża">PKM 2 Przed</balisa>
+			<balisa address="105" mapX="4800" mapY="20" state="[17, 0]" zone="Strzyża">PKM 1 Za</balisa>
+			<balisa address="106" mapX="4880" mapY="20" state="[1, 0]" zone="Strzyża">PKM 2 Za</balisa>
+
+<!--################################################################################################################## Kiełpinek -->				
+			<balisa address="101" mapX="5570" mapY="335" state="[17, 0]" zone="Kiełpinek">PKM 1 Kiełpinek</balisa>
+			<balisa address="102" mapX="5570" mapY="410" state="[17, 0]" zone="Kiełpinek">PKM 2 Kiełpinek</balisa>			
+			<balisa address="104" mapX="5020" mapY="335" state="[17, 0]" zone="Kiełpinek">PKM 1 Estakada</balisa>
+			<balisa address="103" mapX="5020" mapY="410" state="[17, 0]" zone="Kiełpinek">PKM 2 Estakada</balisa>
+			
+			
+<!--################################################################################################################## Banino -->							
+			<balisa address="301" mapX="5350" mapY="900" state="[17, 0]" zone="Banino">SKM Banino All</balisa>
+			<balisa address="501" mapX="5350" mapY="650" state="[1, 0]" zone="Banino">PKM Banino All</balisa>
+			
+			<balisa address="302" mapX="5250" mapY="900" state="[17, 0]" zone="Banino">SKM 1 Banino</balisa>
+			<balisa address="303" mapX="5250" mapY="850" state="[17, 0]" zone="Banino">SKM 2 Banino</balisa>			
+			<balisa address="101" mapX="5250" mapY="800" state="[17, 0]" zone="Banino">DAL 1 Banino</balisa>			
+			<balisa address="102" mapX="5250" mapY="750" state="[17, 0]" zone="Banino">DAL 2 Banino</balisa>			
+			<balisa address="502" mapX="5250" mapY="700" state="[17, 0]" zone="Banino">PKM 1 Banino</balisa>			
+			<balisa address="503" mapX="5250" mapY="650" state="[17, 0]" zone="Banino">PKM 2 Banino</balisa>			
+			
+			
+		</Balises>
+	</root>
