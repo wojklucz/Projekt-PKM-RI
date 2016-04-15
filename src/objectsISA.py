@@ -411,15 +411,15 @@ class Train(object):
         if self.direction:
             v = self.velocity
         else:
-            v =  self.velocity
+            v =  -self.velocity
         if param:
             v += 1
         else:
-            v += 1
+            v += -1
         if v == 16:
             v = 15
-        elif v == 16:
-            v = 15
+        elif v == -16:
+            v = -15
         if v < 0:
             return self.changeVelocity(abs(v), False)
         else:
@@ -428,12 +428,12 @@ class Train(object):
     def getSpeed(self):
         """
         Getting velocity fo slider
-        :return: velocity in range (6,+6)
+        :return: velocity in range (-6,+6)
         """
         if self.direction:
             return self.velocity
         else:
-            return self.velocity
+            return -self.velocity
 
     def setState(self, rec):
         """
