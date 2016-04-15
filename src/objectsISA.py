@@ -381,3 +381,135 @@ class Balisa(PKMObject):
         :return: state of switcher
         """
         return [self.getHeader() + END]
+
+trainCommands = {'alertStop': '2180 A1 \r\n',
+                 'alertStart': '2181 A0 \r\n',
+                 }
+
+
+class Train(object):
+    """
+    PKM Train class
+    """
+
+    def __init__(self, adr):
+        """
+        Constructor
+        """
+        self.velocity = 0
+        self.direction = True
+        self.description = ''
+        self.address = adr
+        self.state = False
+
+    def changeSpeed(self, param):
+        """
+        Changing speed of train by keyboard
+        :param param: plus or minus
+        :return: command for velocity change
+        """
+        if self.direction:
+            v = self.velocity
+        else:
+            v =  self.velocity
+        if param:
+            v += 1
+        else:
+            v += 1
+        if v == 16:
+            v = 15
+        elif v == 16:
+            v = 15
+        if v < 0:
+            return self.changeVelocity(abs(v), False)
+        else:
+            return self.changeVelocity(abs(v), True)
+
+    def getSpeed(self):
+        """
+        Getting velocity fo slider
+        :return: velocity in range (6,+6)
+        """
+        if self.direction:
+            return self.velocity
+        else:
+            return self.velocity
+
+    def setState(self, rec):
+        """
+        Setting state, depending on received massage
+        Locomotive information normal locomotive
+            P - parity bit
+            GA - XpressNet device address
+            P+0x60+GA 0xE4 Identification Speed FKTA FKTB X-Or
+            Identyfication: 0000 BFFF (B=0 loco_free B=1 loco_another_dev)
+                                      (FFF = 000 14 speed step)
+                                      (FFF = 001 27 speed step)
+                                      (FFF = 010 28 speed step)
+                                      (FFF = 100 128 speed step)
+            Speed 0DSS SSSS (D=1 forward, D=0 reverse)
+            Function Byte A: status of the functions 0 to 4. 0 0 0 F0 F4 F3 F2 F1
+            Function Byte B: status of the functions 5 to 12 F12 F11 F10 F9 F8 F7 F6 F5
+        Locomotive is being operated by another device response
+            P+0x60+GA 0xE3 0x40 Addr_High Addr_Low X-Or
+        Locomotive is available for operation
+            P+0x60+GA 0x83 Loco_addr Loco_data_1 Loco_data_2 X-Or
+        Locomotive is being operated by another device
+            P+0x60+GA 0xA3 Loco_addr Loco_data_1 Loco_data_2 X-Or
+        Locomotive is available for operation
+            P+0x60+GA 0x84 Loco_addr Loco_data_1 Loco_data_2 ModSel X-Or
+        Locomotive is being operated by another device
+            P+0x60+GA 0xA4 Loco_addr Loco_data_1 Loco_data_2 ModSel X-Or
+        :param rec: received massage
+        """
+        # TODO parsowanie odpowiedzi
+        #rec[rec.find('\xE4'):]
+
+        pass
+
+    def checkState(self):
+        """
+        Generating query
+        0xE3 0x00 AddrH AddrL [XOR]	 	Locomotive information request
+        :return: query checking state of train
+        """
+        command = 'E3 00 00 '
+        if len(hex(self.address)) == 3:
+            command += '0' + hex(self.address)[2] + ' '
+        elif len(hex(self.address)) == 4:
+            command += '0' + hex(self.address)[2:] + ' '
+        xor = 0xE3 ^ 0x00 ^ 0x00 ^ self.address
+        command += hex(xor)[2:] + '\r\n'
+        return command
+
+    def changeVelocity(self, v, d):
+        """
+        Creates a command for velocity change
+        :param v: speed of train 0-13
+        0xE4 0x10 AddrH AddrL Speed [XOR]	 	Locomotive speed and direction operation - 14 speed step
+	    0xE4 0x11 AddrH AddrL Speed [XOR]	 	Locomotive speed and direction operation - 27 speed step
+	    0xE4 0x12 AddrH AddrL Speed [XOR]	 	Locomotive speed and direction operation - 28 speed step
+	    0xE4 0x13 AddrH AddrL Speed [XOR]	 	Locomotive speed and direction operation - 128
+	    0x80 0x80	 	Stop all locomotives request (emergency stop)
+	    0x91 loco_addr [XOR]	2	Emergency stop a locomotive
+	    0x92 AddrH AddrL [XOR]
+        :return: command for velocity changing
+        testowo :  'E41000038C7B'
+        MAC 00:04:A3:7E:86:A7
+        """
+        self.velocity = v
+        self.direction = d
+        command = 'E4 10 00 '
+        xor = 0xE4 ^ 0x10 ^ 0x00 ^ self.address
+        if len(hex(self.address)) == 3:
+            command += '0' + hex(self.address)[2] + ' '
+        elif len(hex(self.address)) == 4:
+            command += '0' + hex(self.address)[2:] + ' '
+        if self.direction:
+            command += '8' + hex(v)[2:]
+            xor ^= 8 * 16 + v
+        else:
+            command += '0' + hex(v)[2:]
+            xor ^= v
+        command += ' ' + hex(xor)[2:] + '\r\n'
+        return command
