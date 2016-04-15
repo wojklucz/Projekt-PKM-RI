@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 	<root date="11/06/15 12:02:02">
 		<Switchers quantity="34">
 			<switcher address="101" mapX="367" mapY="338" orientation="0" state="Left" zone="Wrzeszcz">IN = PKM 1
@@ -219,17 +219,6 @@ OUT_P [P] = PKM 2 Osowa </switcher>
 			<balisa address="104" mapX="5020" mapY="335" state="[17, 0]" zone="Kiełpinek">PKM 1 Estakada</balisa>
 			<balisa address="103" mapX="5020" mapY="410" state="[17, 0]" zone="Kiełpinek">PKM 2 Estakada</balisa>
 			
-			
-<!--################################################################################################################## Banino -->							
-			<balisa address="301" mapX="5350" mapY="900" state="[17, 0]" zone="Banino">SKM Banino All</balisa>
-			<balisa address="501" mapX="5350" mapY="650" state="[1, 0]" zone="Banino">PKM Banino All</balisa>
-			
-			<balisa address="302" mapX="5250" mapY="900" state="[17, 0]" zone="Banino">SKM 1 Banino</balisa>
-			<balisa address="303" mapX="5250" mapY="850" state="[17, 0]" zone="Banino">SKM 2 Banino</balisa>			
-			<balisa address="101" mapX="5250" mapY="800" state="[17, 0]" zone="Banino">DAL 1 Banino</balisa>			
-			<balisa address="102" mapX="5250" mapY="750" state="[17, 0]" zone="Banino">DAL 2 Banino</balisa>			
-			<balisa address="502" mapX="5250" mapY="700" state="[17, 0]" zone="Banino">PKM 1 Banino</balisa>			
-			<balisa address="503" mapX="5250" mapY="650" state="[17, 0]" zone="Banino">PKM 2 Banino</balisa>			
 			
 			
 		</Balises>
