@@ -36,16 +36,6 @@ switcherComm = {'Left': '31',
 rev = dict([reversed(i) for i in switcherComm.items()])
 switcherComm.update(rev)
 
-wigwagComm = {'Turn On 0': '31',
-              'Turn On 1': '32',
-              'Turn On 2': '33',
-              'Turn On 3': '34',
-              'Turn On 4': '35',
-              'Turn Off': '30',
-              'Get state': '39'}
-rev = dict([reversed(i) for i in wigwagComm.items()])
-wigwagComm.update(rev)
-
 balisaComm = {'Turn Off': '30',
               'Set INT0': '31',
               'Set INT1': '32',
@@ -57,9 +47,6 @@ balisaComm.update(rev)
 
 
 class PKMObject(object):
-    """
-    Abstract class for PKM objects
-    """
 
     def __init__(self):
         self.zone = zoneDict['None']
@@ -285,98 +272,6 @@ class Multiswitcher(Switcher):
             return self.switchCross()
 
 
-class Wigwag(PKMObject):
-    """
-    Wigwag class
-    """
-
-    def __init__(self):
-        PKMObject.__init__(self)
-        self.type = typeDict['Wigwag']
-        self.state = [0, 0, 0, 0, 0]
-        self.alarm = [0, 0, 0, 0, 0]
-        self.description = 'Wigwag on PKM track'
-
-    def turnOnSingleLed(self, no):
-        """
-        Turning on single LED
-        :param no: number of LED
-        :return: list of commands
-        """
-        c = wigwagComm['Turn On ' + str(no)]
-        self.state[no] = 1
-        return [self.getHeader() + c + END]
-
-    def turnOffSingleLed(self, no):
-        """
-        Turning off single LED
-        :param no: number of LED
-        :return: list of commands
-        """
-        self.state[no] = 0
-        self.alarm[no] = 0
-        hexNo = hex(int(''.join([str(i) for i in self.state]), 2))[2:]
-        return [self.getHeader() + '0' + hexNo + END]
-
-    def setLed(self, state):
-        """
-        Turning on/off set of LEDs
-        :param state: state of wigwag
-        :return: list of commands
-        """
-        self.state = state
-        hexNo = hex(int(''.join([str(i) for i in self.state]), 2))[2:]
-        if len(hexNo) == 1:
-            return [self.getHeader() + '0' + hexNo + ' 00' + END]
-        elif len(hexNo) == 2:
-            return [self.getHeader() + hexNo + ' 00' + END]
-
-    def setAlarmsLed(self, state):
-        """
-        Turning alarm on/off set of LEDs
-        :param state: state of wigwag
-        :return: list of commands
-        """
-        self.alarm = state
-        hexNo = hex(int(''.join([str(i) for i in self.state]), 2))[2:]
-        if len(hexNo) == 1:
-            return [self.getHeader() + '0' + hexNo + END,
-                    self.getHeader() + '00 ' + '0' + hexNo + END]
-        elif len(hexNo) == 2:
-            return [self.getHeader() + hexNo + END,
-                    self.getHeader() + '00 ' + hexNo + END]
-
-    def turnWigwagOff(self):
-        """
-        Turning wigwag off
-        :return: list of commands
-        """
-        self.state = [0, 0, 0, 0, 0]
-        self.alarm = [0, 0, 0, 0, 0]
-        return [self.getHeader() + wigwagComm['Turn Off'] + END]
-
-    def checkState(self, stats):
-        """
-        Checking state of switcher based on string
-        :param stats: state of the switcher
-        :return: state of switcher
-        """
-        tmp = list(bin(int(stats[0:2], 16))[2:])
-        self.state = [0] * (5 - len(tmp))
-        self.state.extend([int(i) for i in tmp])
-
-        tmp = list(bin(int(stats[3:5], 16))[2:])
-        self.alarm = [0] * (5 - len(tmp))
-        self.alarm.extend([int(i) for i in tmp])
-
-    def testState(self):
-        """
-        Testing and checking state of the switcher
-        :return: state of switcher
-        """
-        return [self.getHeader() + wigwagComm['Get state'] + END]
-
-
 class Balisa(PKMObject):
     """
     Balisa class
@@ -485,9 +380,7 @@ class Balisa(PKMObject):
         Testing and checking state of the switcher
         :return: state of switcher
         """
-        return [self.getHeader() + wigwagComm['Get state'] + END]
-
-
+        return [self.getHeader() + END]
 
 trainCommands = {'alertStop': '2180 A1 \r\n',
                  'alertStart': '2181 A0 \r\n',
@@ -518,7 +411,7 @@ class Train(object):
         if self.direction:
             v = self.velocity
         else:
-            v = - self.velocity
+            v =  -self.velocity
         if param:
             v += 1
         else:

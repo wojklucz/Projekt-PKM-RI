@@ -7,13 +7,11 @@ __author__ = 'mikhael'
 import sys
 import serial
 import threading
-import datetime
 from serial.tools.list_ports import comports
 from objectsISA import *
 from time import sleep
 from PyQt4.QtCore import *
 import winsound
-import xml.etree.ElementTree as ET
 
 class CommunicationModule(QObject):
     """
@@ -30,8 +28,7 @@ class CommunicationModule(QObject):
                     2: escape non-printable characters, newlines too;
                     3: hex dump everything), default = 0
     """
-
-    def __init__(self, port, baudRate, parity, rtscts=False, xonxoff=False,
+    def __init__(self, port, baudRate, parity = serial.PARITY_NONE, rtscts=False, xonxoff=False,
                  echo=False, convert_outgoing=1, repr_mode=0):
         QObject.__init__(self)
         try:
@@ -56,11 +53,12 @@ class CommunicationModule(QObject):
         self.transmitter_thread = None
         self.receiver_thread = None
         self.log = list()
-        self.xlogger = None
+        #self.xlogger = xLogger("logger")
         self.switchersLst = []
         self.wigwagsLst = []
         self.balisesLst = []
         self.sendCommandLog = []
+
 
     @staticmethod
     def getPortList():
@@ -129,38 +127,42 @@ class CommunicationModule(QObject):
                 command += data
                 if data == '\r':
                     command = command.strip()
-                    #self.xlogger.warning('ISA Read: ' + str(time.hour) + ':' + str(time.minute) + ':' + str(time.second) + ':' + str(time.microsecond) + command) grupa Adrian
-                    self.xlogger.warning('ISA Read: ' + command)
+                    ##self.xlogger.warning('ISA Read: ' + str(time.hour) + ':' + str(time.minute) + ':' + str(time.second) + ':' + str(time.microsecond) + command) grupa Adrian
+                    #self.xlogger.warning('ISA Read: ' + command)
                     if command:
                         self.log.append(command.strip())
                         if command[0] == '>':
-                            typo = typeDict[command[1:3]]
-                            zone = zoneDict[command[3:5]]
-                            address = int(command[5:9], 16)
-                            if typo == 'Switcher':
-                                for el in self.switchersLst:
-                                    if el.zone == zone and el.deviceNo == address:
-                                        el.checkState(command[10:])
-                            elif typo == 'Wigwag':
-                                for el in self.wigwagsLst:
-                                    if el.zone == zone and el.deviceNo == address:
-                                        el.checkState(command[10:])
-                            elif typo == 'Balisa'  or command[1:3] == '43':#balisa kiełpinek:
-                                for el in self.balisesLst:
-                                    if el.zone == zone and el.deviceNo == address:
-                                        msg = el.checkState(command[10:])
-                                        if el.state['int0']:
-                                            winsound.Beep(2500, 100)
-                                        else:
-                                            winsound.Beep(1000, 100)
-                                        # time = datetime.datetime.now() #adrian
-                                        # print('time sec',time.second)
-                                        # print('mili ',time.microsecond)
-                                        # print('zone',el.zone) #grupa Adrian
-                                        # print('device number',el.deviceNo) #grupa Adrian
-                                        # print()
-                                        # print(msg)
-                                        self.emit(SIGNAL("balisa_int"), el)
+                            try:
+                                typo = typeDict[command[1:3]]
+                                zone = zoneDict[command[3:5]]
+                                address = int(command[5:9], 16)
+
+                                if typo == 'Switcher':
+                                    for el in self.switchersLst:
+                                        if el.zone == zone and el.deviceNo == address:
+                                            el.checkState(command[10:])
+                                elif typo == 'Wigwag':
+                                    for el in self.wigwagsLst:
+                                        if el.zone == zone and el.deviceNo == address:
+                                            el.checkState(command[10:])
+                                elif typo == 'Balisa'  or command[1:3] == '43':#balisa kiełpinek:
+                                    for el in self.balisesLst:
+                                        if el.zone == zone and el.deviceNo == address:
+                                            msg = el.checkState(command[10:])
+                                            if el.state['int0']:
+                                                winsound.Beep(2500, 100)
+                                            else:
+                                                winsound.Beep(1000, 100)
+                                            # time = datetime.datetime.now() #adrian
+                                            # print('time sec',time.second)
+                                            # print('mili ',time.microsecond)
+                                            # print('zone',el.zone) #grupa Adrian
+                                            # print('device number',el.deviceNo) #grupa Adrian
+                                            # print()
+                                            # print(msg)
+                                            self.emit(SIGNAL("balisa_int"), el)
+                            except:
+                                print command+' dafuq'
                     command = ''
         except serial.SerialException:
             self.alive = False
@@ -180,9 +182,9 @@ class CommunicationModule(QObject):
                 else:
                     line = line.replace('\n', '\r')
                     self.serial.write(line)
-                    self.xlogger.info(line)
+                    #self.xlogger.info(line)
         except:
-            self.xlogger.error('Exception')
+            #self.xlogger.error('Exception')
             self.alive = False
             raise
 
@@ -195,18 +197,18 @@ class CommunicationModule(QObject):
             if not self.sendCommandLog:
                 for c in command:
                     self.serial.write(c)
-                    self.xlogger.warning('ISA Send: ' + c)
+                    # #self.xlogger.warning('ISA Send: ' + c)
                     self.sendCommandLog.append(command)
                     sleep(0.2)
             elif not command == self.sendCommandLog[-1]:
                 for c in command:
                     self.serial.write(c)
-                    self.xlogger.warning('ISA Send: ' + c)
+                    # #self.xlogger.warning('ISA Send: ' + c)
                     self.sendCommandLog.append(command)
                     sleep(0.2)
 
         except:
-            self.xlogger.error('Exception in writing command')
+            #self.xlogger.error('Exception in writing command')
             self.alive = False
             raise
 
@@ -243,12 +245,6 @@ class CommunicationModule(QObject):
                         sw.deviceNo = address
                         sw.checkState(el[el.find(' ')+1:])
                         self.switchersLst.append(sw)
-                    elif typo == 'Wigwag':
-                        ww = Wigwag()
-                        ww.zone = zone
-                        ww.deviceNo = address
-                        ww.checkState(el[el.find(' ')+1:])
-                        self.wigwagsLst.append(ww)
                     elif typo == 'Balisa' or '43' in el[1:3]:
                         ba = Balisa()
                         ba.zone = zone
@@ -256,6 +252,7 @@ class CommunicationModule(QObject):
                         #ba.checkState(el[el.find(' ')+1:])
                         self.balisesLst.append(ba)
                 except Exception:
-                    self.xlogger.error('Element ' + el[1:] + 'found, but address is incorrect.')
+                    print 'dupa'
+                    #self.xlogger.error('Element ' + el[1:] + 'found, but address is incorrect.')
         self.log = []
         return self.switchersLst, self.wigwagsLst, self.balisesLst
