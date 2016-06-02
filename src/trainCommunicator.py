@@ -53,7 +53,6 @@ class TrainCommunicator(object):
 
         return xor
 
-
     def acknowledgement_response(self):
         cmd = "20"
         self.send_data(cmd)
@@ -139,7 +138,7 @@ class TrainCommunicator(object):
             loco = "0" + hex(loco)[2:]
         else:
             loco = hex(loco)[2:]
-        cmd = "410000" + loco + speed
+        cmd = "e41000" + loco + speed
         self.send_data(cmd)
     #
     # def function_operation_instructions(self, address):
@@ -166,9 +165,13 @@ class TrainCommunicator(object):
     #     cmd = "e630000" + address + "e8 + cc" + cv +value/bit + XOR   #ustalic XOR
     #     self.send_data(cmd)
     #
-    # def add_a_locomotive_to_a_multi_unit_request(self, address, R):
-    #     cmd = "e44" + R + "000" + address + MTR + XOR   #ustalic XOR, MTR=1-99
-    #     self.send_data(cmd)                                 #R=0 jesli kierunek sie zgadza, R=1 jesli jest przeciwny
+    def add_a_locomotive_to_a_multi_unit_request(self, loco):
+        if loco < 16:
+            loco = "0" + hex(loco)[2:]
+        else:
+            loco = hex(loco)[2:]
+        cmd = "440000" + loco + "03"   #ustalic XOR, MTR=1-99
+        self.send_data(cmd)                                 #R=0 jesli kierunek sie zgadza, R=1 jesli jest przeciwny
     #
     # def remove_a_locomotive_from_a_multi_unit_request(self, address):
     #     cmd = "e442000" + address + MTR + XOR
@@ -196,5 +199,6 @@ if __name__ == '__main__':
     kom.set_speed(2,None,"0f")
     sleep(2)
     kom.set_speed(2,None,"00")
-    kom.emergency_stop()
-    kom.resume_operations_request()
+    #kom.set_speed(2,None,"00")
+    #kom.emergency_stop()
+    #kom.resume_operations_request()
