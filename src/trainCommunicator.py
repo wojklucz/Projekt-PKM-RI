@@ -133,7 +133,10 @@ class TrainCommunicator(object):
     #     cmd = "e410000" + address + RV + XOR     #ustalic RV, XOR
     #     self.send_data(cmd)
 
-    def set_speed(self,loco,direction,speed):
+    def set_speed(self,loco,forward,speed):
+        assert 0 <= speed and speed < 128
+        if not forward:
+            loco = loco + 128
         if loco < 16:
             loco = "0" + hex(loco)[2:]
         else:
