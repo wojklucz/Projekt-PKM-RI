@@ -133,15 +133,15 @@ class TrainCommunicator(object):
     #     cmd = "e410000" + address + RV + XOR     #ustalic RV, XOR
     #     self.send_data(cmd)
 
-    def set_speed(self,loco,forward,speed):
-        assert 0 <= speed and speed < 128
-        if not forward:
-            loco = loco + 128
+    def set_speed(self,loco,speed):
+        predkosci = {"przod":"30","stop":"00","tyl":"B0"}
         if loco < 16:
             loco = "0" + hex(loco)[2:]
         else:
             loco = hex(loco)[2:]
-        cmd = "e41000" + loco + speed
+        print loco
+        print "Speed: " + speed
+        cmd = "e41300" + loco + predkosci[speed]
         self.send_data(cmd)
     #
     # def function_operation_instructions(self, address):
@@ -199,9 +199,9 @@ class TrainCommunicator(object):
 if __name__ == '__main__':
     kom = TrainCommunicator()
     kom.connect('192.168.0.200', 5550)
-    kom.set_speed(2,None,"0f")
-    sleep(2)
-    kom.set_speed(2,None,"00")
+    kom.set_speed(2,"przod")
+    sleep(5)
+    kom.set_speed(2,"stop")
     #kom.set_speed(2,None,"00")
     #kom.emergency_stop()
     #kom.resume_operations_request()
