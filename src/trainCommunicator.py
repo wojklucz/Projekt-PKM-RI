@@ -4,12 +4,26 @@ import binascii
 from time import sleep
 
 class TrainCommunicator(object):
+    """Object comunicating with the trains
+        Attributes:
+            connection (socket): Allows connection with the trains
+
+        """
     def __init__(self):
-        self.connection = None
+        self.connection = None     #Placeholder for socket
 
     def send_data(self,msg):
-        assert isinstance(self.connection,socket.socket)
-        xor = self.calculate_checksum(msg)
+        """Sends a message with prepended header and appended checksum
+
+              Args:
+                  msg: message prepared to send
+
+              Returns:
+                  None
+
+              """
+        assert isinstance(self.connection,socket.socket)    #check if socket is set
+        xor = self.calculate_checksum(msg)                  #calculate cheksum byte
         print "Sending: " + str(msg) + " XOR: " + str(xor)
         msg += xor                                     #append XOR byte
         msg = "fffe" + msg                             #add header
@@ -27,12 +41,30 @@ class TrainCommunicator(object):
             print "Cheksum OK"
 
     def connect(self, ip, port):
+        """Connect with the command station
+
+              Args:
+                  ip: Command station ip
+                  port: Command station port.
+
+              Returns:
+                  None
+              """
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connection.connect((ip,port))
         data = "f101"
         self.send_data(data)
 
     def calculate_checksum(self,msg):
+        """Calculates the checksum for the message
+
+              Args:
+                  msg(str): message to send
+
+              Returns:
+                  None
+
+              """
         s = msg
         byte_list = []
         while s:  # split string into bytes
@@ -40,9 +72,9 @@ class TrainCommunicator(object):
             s = s[2:]
         for i in range(1, len(byte_list)):
             if i == 1:
-                xor = byte_list[i - 1] ^ byte_list[i]  # xor each byte
+                xor = byte_list[i - 1] ^ byte_list[i]   # xor first with second
             else:
-                xor = xor ^ byte_list[i]
+                xor = xor ^ byte_list[i]                # xor previous xor with next byte
         if len(byte_list) == 1:
             xor = byte_list[0]
         if  xor < 16:
@@ -50,9 +82,9 @@ class TrainCommunicator(object):
             xor = "0" + xor
         else:
             xor = hex(xor)[2:]  # decimal to hex, remove 0x
-
         return xor
 
+    #command section - function names explain what the appropriate codes do
     def acknowledgement_response(self):
         cmd = "20"
         self.send_data(cmd)
@@ -69,6 +101,43 @@ class TrainCommunicator(object):
         cmd = "80"
         self.send_data(cmd)
 
+    def command_station_software_version_request(self):
+        cmd = "2121"
+        self.send_data(cmd)
+
+    def set_speed(self,loco,speed):
+        """Sets speed for specified locomotive
+
+                      Args:
+                          loco(int): id of locomotive to set speed
+                          speed(str): one of choices
+                          "przod":foward,
+                          "tyl":backward,
+                          "stop":0
+
+                      Returns:
+                          None
+
+                      """
+        predkosci = {"przod":"30","stop":"00","tyl":"B0"}
+        if loco < 16:
+            loco = "0" + hex(loco)[2:]
+        else:
+            loco = hex(loco)[2:]
+        print loco
+        print "Speed: " + speed
+        cmd = "e41300" + loco + predkosci[speed]
+        self.send_data(cmd)
+
+    def add_a_locomotive_to_a_multi_unit_request(self, loco):
+        if loco < 16:
+            loco = "0" + hex(loco)[2:]
+        else:
+            loco = hex(loco)[2:]
+        cmd = "440000" + loco + "03"   #ustalic XOR, MTR=1-99
+        self.send_data(cmd)                                 #R=0 jesli kierunek sie zgadza, R=1 jesli jest przeciwny
+
+    # TODO: Implement this methods if needed
     # def emergency_stop_a_locomotive(self, address):
     #     cmd = "92000" + address + XOR     #ustalic XOR
     #     self.send_data(cmd)
@@ -101,9 +170,26 @@ class TrainCommunicator(object):
     #     cmd = "2317 cv Data XOR"         #ustalic cv, Data, XOR
     #     self.send_data(cmd)
     #
-    def command_station_software_version_request(self):
-        cmd = "2121"
-        self.send_data(cmd)
+    #
+    # def remove_a_locomotive_from_a_multi_unit_request(self, address):
+    #     cmd = "e442000" + address + MTR + XOR
+    #     self.send_data(cmd)
+    #
+    # def address_inquiry_member_of_a_multi_unit_request(self, address, R):
+    #     cmd = "e401 + R" + MTR+ "000" + address + XOR
+    #     self.send_data(cmd)
+    #
+    # def address_inquiry_multi_unit_request(self, R):
+    #     cmd = "e203 + R" + MTR + XOR
+    #     self.send_data(cmd)
+    #
+    # def address_inquiry_locomotive_at_command_station_stack_request(self, address, R):
+    #     cmd = "e305 + R" + "000" + address + XOR
+    #     self.send_data(cmd)
+    #
+    # def delete_locomotive_from_command_station_stack_request(self, address):
+    #     cmd = "e344000" + address + XOR
+    #     self.send_data(cmd)
     #
     # def command_station_status_request(self):
     #     cmd = "212405"
@@ -133,72 +219,12 @@ class TrainCommunicator(object):
     #     cmd = "e410000" + address + RV + XOR     #ustalic RV, XOR
     #     self.send_data(cmd)
 
-    def set_speed(self,loco,direction,speed):
-        if loco < 16:
-            loco = "0" + hex(loco)[2:]
-        else:
-            loco = hex(loco)[2:]
-        cmd = "e41000" + loco + speed
-        self.send_data(cmd)
-    #
-    # def function_operation_instructions(self, address):
-    #     cmd = "e420000" + address + group + XOR    #ustalic XOR
-    #     self.send_data(cmd)
-    #
-    # def set_function_state(self, address):
-    #     cmd = "e424000" + address + group + XOR    #ustalic XOR
-    #     self.send_data(cmd)
-    #
-    # def establish_double_header(self, address1, address2):
-    #     cmd = "e543000" + address1 + "000" + address2 + XOR    #ustalic XOR
-    #     self.send_data(cmd)
-    #
-    # def dissolve_double_header(self, address):
-    #     cmd = "e543000" + address + "0000" + XOR    #ustalic XOR
-    #     self.send_data(cmd)
-    #
-    # def operations_mode_programming_byte_mode_write_request(self, address):
-    #     cmd = "e630000" + address + "ec + c" + cv +d + XOR   #ustalic XOR
-    #     self.send_data(cmd)
-    #
-    # def operations_mode_programming_bit_mode_write_request(self, address):
-    #     cmd = "e630000" + address + "e8 + cc" + cv +value/bit + XOR   #ustalic XOR
-    #     self.send_data(cmd)
-    #
-    def add_a_locomotive_to_a_multi_unit_request(self, loco):
-        if loco < 16:
-            loco = "0" + hex(loco)[2:]
-        else:
-            loco = hex(loco)[2:]
-        cmd = "440000" + loco + "03"   #ustalic XOR, MTR=1-99
-        self.send_data(cmd)                                 #R=0 jesli kierunek sie zgadza, R=1 jesli jest przeciwny
-    #
-    # def remove_a_locomotive_from_a_multi_unit_request(self, address):
-    #     cmd = "e442000" + address + MTR + XOR
-    #     self.send_data(cmd)
-    #
-    # def address_inquiry_member_of_a_multi_unit_request(self, address, R):
-    #     cmd = "e401 + R" + MTR+ "000" + address + XOR
-    #     self.send_data(cmd)
-    #
-    # def address_inquiry_multi_unit_request(self, R):
-    #     cmd = "e203 + R" + MTR + XOR
-    #     self.send_data(cmd)
-    #
-    # def address_inquiry_locomotive_at_command_station_stack_request(self, address, R):
-    #     cmd = "e305 + R" + "000" + address + XOR
-    #     self.send_data(cmd)
-    #
-    # def delete_locomotive_from_command_station_stack_request(self, address):
-    #     cmd = "e344000" + address + XOR
-    #     self.send_data(cmd)
-
 if __name__ == '__main__':
+    #short test moving train 2 back and forth
     kom = TrainCommunicator()
     kom.connect('192.168.0.200', 5550)
-    kom.set_speed(2,None,"0f")
-    sleep(2)
-    kom.set_speed(2,None,"00")
-    #kom.set_speed(2,None,"00")
-    #kom.emergency_stop()
-    #kom.resume_operations_request()
+    kom.set_speed(2,"tyl")
+    sleep(5)
+    kom.set_speed(2,"przod")
+    sleep(5)
+    kom.set_speed(2,"stop")
