@@ -5,14 +5,22 @@ import xml.dom.minidom as md
 
 
 class dataLoader():
+    """
+    Klasa odpowiadająca za załadowanie danych balis i zwrotnic z pliku config_al.xml .
+    """
     def __init__(self):
         self.switchersLst =[]
         self.balisesLst = []
 
     def load(self):
+        """
+        Jedyna metoda klasy, ładuje dane z pliku do pól switchersLst i balisesLst.
+        :return: None
+        """
+
         fileName = "config_al.xml"
 
-        tree = md.parse(fileName)#, encoding='utf-8')
+        tree = md.parse(fileName)
         tags = ['switcher', 'balisa']
         lst = [[], []]
         for i in range(2):
