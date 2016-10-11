@@ -153,13 +153,6 @@ class CommunicationModule(QObject):
                                                 winsound.Beep(2500, 100)
                                             else:
                                                 winsound.Beep(1000, 100)
-                                            # time = datetime.datetime.now() #adrian
-                                            # print('time sec',time.second)
-                                            # print('mili ',time.microsecond)
-                                            # print('zone',el.zone) #grupa Adrian
-                                            # print('device number',el.deviceNo) #grupa Adrian
-                                            # print()
-                                            # print(msg)
                                             self.emit(SIGNAL("balisa_int"), el)
                             except:
                                 print command+' dafuq'

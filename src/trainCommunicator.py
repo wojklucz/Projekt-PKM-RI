@@ -7,20 +7,16 @@ class TrainCommunicator(object):
     """Object comunicating with the trains
         Attributes:
             connection (socket): Allows connection with the trains
-
         """
     def __init__(self):
         self.connection = None     #Placeholder for socket
 
     def send_data(self,msg):
         """Sends a message with prepended header and appended checksum
-
               Args:
                   msg: message prepared to send
-
               Returns:
                   None
-
               """
         assert isinstance(self.connection,socket.socket)    #check if socket is set
         xor = self.calculate_checksum(msg)                  #calculate cheksum byte
@@ -42,11 +38,9 @@ class TrainCommunicator(object):
 
     def connect(self, ip, port):
         """Connect with the command station
-
               Args:
                   ip: Command station ip
                   port: Command station port.
-
               Returns:
                   None
               """
@@ -57,13 +51,10 @@ class TrainCommunicator(object):
 
     def calculate_checksum(self,msg):
         """Calculates the checksum for the message
-
               Args:
                   msg(str): message to send
-
               Returns:
                   None
-
               """
         s = msg
         byte_list = []
@@ -107,19 +98,17 @@ class TrainCommunicator(object):
 
     def set_speed(self,loco,speed):
         """Sets speed for specified locomotive
-
                       Args:
                           loco(int): id of locomotive to set speed
                           speed(str): one of choices
                           "przod":foward,
+                          "wolnoprzod":slowly forward
                           "tyl":backward,
                           "stop":0
-
                       Returns:
                           None
-
                       """
-        predkosci = {"przod":"30","stop":"00","tyl":"B0"}
+        predkosci = {"przod":"B0","stop":"00","tyl":"30","wolnoprzod":"91"}
         if loco < 16:
             loco = "0" + hex(loco)[2:]
         else:
@@ -127,6 +116,20 @@ class TrainCommunicator(object):
         print loco
         print "Speed: " + speed
         cmd = "e41300" + loco + predkosci[speed]
+        self.send_data(cmd)
+
+    def set_sped(self,loco,speed):
+        """
+        Function similar to the one above. Used only to test and debug.
+        :param loco: id of locomotive to set speed
+        :param speed: 1-byte hexadecimal number (as string)
+        :return: None
+        """
+        if loco < 16:
+            loco = "0" + hex(loco)[2:]
+        else:
+            loco = hex(loco)[2:]
+        cmd = "e41300" + loco + speed
         self.send_data(cmd)
 
     def add_a_locomotive_to_a_multi_unit_request(self, loco):
