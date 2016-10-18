@@ -132,6 +132,27 @@ class TrainCommunicator(object):
         cmd = "e41300" + loco + speed
         self.send_data(cmd)
 
+    def set_speed_direction(self,loco,speed,dir):
+        """
+        Function for setting locomotive speed with specified directin
+        :param loco: id of locomotive to set speed
+        :param speed: int 0-127: value of speed
+        :param dir: int 0-1: value of direction, 0-forward, 1-backwards
+        :return: None
+        """
+        assert(speed < 128 and speed >= 0)
+        assert(dir in (0,1))
+        if loco < 16:
+            loco = "0" + hex(loco)[2:]
+        else:
+            loco = hex(loco)[2:]
+        speed = hex(dir*128+speed)[2:]
+        if len(speed) == 1:
+            speed = "0" + speed
+        cmd = "e41300" + loco + speed
+        self.send_data(cmd)
+
+
     def add_a_locomotive_to_a_multi_unit_request(self, loco):
         if loco < 16:
             loco = "0" + hex(loco)[2:]
@@ -226,8 +247,8 @@ if __name__ == '__main__':
     #short test moving train 2 back and forth
     kom = TrainCommunicator()
     kom.connect('192.168.0.200', 5550)
-    kom.set_speed(2,"tyl")
+    kom.set_speed_direction(2,127,0)
     sleep(5)
-    kom.set_speed(2,"przod")
+    kom.set_speed_direction(2,127,1)
     sleep(5)
-    kom.set_speed(2,"stop")
+    kom.set_speed_direction(2,0,0)
