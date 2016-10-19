@@ -1,5 +1,6 @@
 import socket
 import binascii
+import logging
 
 from time import sleep
 
@@ -20,7 +21,7 @@ class TrainCommunicator(object):
               """
         assert isinstance(self.connection,socket.socket)    #check if socket is set
         xor = self.calculate_checksum(msg)                  #calculate cheksum byte
-        print "Sending: " + str(msg) + " XOR: " + str(xor)
+        logging.debug("Sending: " + str(msg) + " XOR: " + str(xor))
         msg += xor                                     #append XOR byte
         msg = "fffe" + msg                             #add header
         msg = binascii.unhexlify(msg)                  #convert to raw data
@@ -30,13 +31,13 @@ class TrainCommunicator(object):
         response = response[4:]                        #strip header
         xor = response[-2:]                            #get cheksum
         response = response [:-2]                      #strip chekscum
-        print "Recieved: " + response + " XOR: " + str(xor)
+        logging.debug("Recieved: " + response + " XOR: " + str(xor))
         if self.calculate_checksum(response) != xor:   #check if cheksum ok
             raise Exception("Communication error: BAD CHEKSUM")
         else:
-            print "Cheksum OK"
+            logging.debug("Cheksum OK")
 
-    def connect(self, ip, port):
+    def connect(self, ip='192.168.0.200', port=5550):
         """Connect with the command station
               Args:
                   ip: Command station ip
@@ -113,8 +114,6 @@ class TrainCommunicator(object):
             loco = "0" + hex(loco)[2:]
         else:
             loco = hex(loco)[2:]
-        print loco
-        print "Speed: " + speed
         cmd = "e41300" + loco + predkosci[speed]
         self.send_data(cmd)
 
@@ -247,8 +246,11 @@ if __name__ == '__main__':
     #short test moving train 2 back and forth
     kom = TrainCommunicator()
     kom.connect('192.168.0.200', 5550)
-    kom.set_speed_direction(2,127,0)
+    train = 3
+    kom.set_speed_direction(train,127,1)
     sleep(5)
-    kom.set_speed_direction(2,127,1)
+    kom.set_speed_direction(train,0,0)
     sleep(5)
-    kom.set_speed_direction(2,0,0)
+    kom.set_speed_direction(train,127,1)
+    sleep(5)
+    kom.set_speed_direction(train,0,0)
