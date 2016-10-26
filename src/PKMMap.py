@@ -28,7 +28,7 @@ class Nastawa:
 
 class Czujnik:
     """
-    klasa czujnika: numer, pozycja, strefa, stan
+    klasa czujnika: numer, pozycja (wspolrzedne srodka), strefa, stan
     timeout: jest to czas po jakim czujnik jest nieaktywny po zmianie stanu w celu zapobiegniecia wielokrotnych zmian
     nastawy: sterowanie za pomoca balis: nastawy, jakie zostana ustawione po przejechaniu przez czujnik
     """
@@ -330,9 +330,10 @@ class Map(QtGui.QWidget):
         wyrysowanie linii
         """
         qp.drawLine(ax*xsize, ay*xsize, bx*xsize, by*xsize)
+
     def krzywa(self, qp, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, xsize):
         """
-        wyrysowanie krzywej. Parametrami sa wspolrzedne punktow, przez ktore przechodzi krzywa
+        wyrysowanie krzywej. Parametry: p0x, p0y - początek krzywej, p3x, p3y - koniec krzywej
         """
         p0 = QtCore.QPointF(p0x*xsize, p0y*xsize)
         p1 = QtCore.QPointF(p1x*xsize, p1y*xsize)
@@ -341,6 +342,16 @@ class Map(QtGui.QWidget):
         cubicPath = QtGui.QPainterPath(p0)
         cubicPath.cubicTo(p1,p2,p3)
         qp.drawPath(cubicPath);
+
+    def BluePen(self, qp, pen):
+        blue = QtGui.QColor(0, 0, 255)
+        pen.setColor(blue)
+        qp.setPen(pen)
+
+    def GrayPen(self, qp, pen):
+        gray = QtGui.QColor(200, 200, 200)
+        pen.setColor(gray)
+        qp.setPen(pen)
 
     def drawAll(self, qp, scaled):
         """
@@ -386,11 +397,11 @@ class Map(QtGui.QWidget):
                     color.setNamedColor('#0000FF')
                 qp.setPen(color)
                 qp.setBrush(Qt.green)
-                qp.drawEllipse(self.czujniki[i].x*xsize, self.czujniki[i].y*xsize, 8*xsize, 8*xsize)
+                qp.drawEllipse(self.czujniki[i].x*xsize-4*xsize, self.czujniki[i].y*xsize-4*xsize, 8*xsize, 8*xsize)
                 if not self.czujniki[i].nr == 1:
-                    qp.drawText(self.czujniki[i].x*xsize, self.czujniki[i].y*xsize, str(self.czujniki[i].nr)+str(self.czujniki[i].zone))
+                    qp.drawText(self.czujniki[i].x*xsize-4*xsize, self.czujniki[i].y*xsize-4*xsize, str(self.czujniki[i].nr)+str(self.czujniki[i].zone))
                 else:
-                    qp.drawText(self.czujniki[i].x*xsize, self.czujniki[i].y*xsize, str(i))
+                    qp.drawText(self.czujniki[i].x*xsize-4*xsize, self.czujniki[i].y*xsize-4*xsize, str(i))
 
         qp.setBrush(QtGui.QColor(255, 255, 255, 0))
         color = QtGui.QColor(0, 0, 0)
@@ -400,6 +411,7 @@ class Map(QtGui.QWidget):
         else:
             pen.setWidth(4)
         qp.setPen(pen)
+
         # rysowanie fragmentow torow bez zwrotnic:
         qp.drawLine(503*xsize, 505*xsize, 662*xsize, 504*xsize)
         qp.drawLine(553*xsize, 511*xsize, 662*xsize, 509*xsize)
@@ -472,7 +484,6 @@ class Map(QtGui.QWidget):
         self.linia(qp, 1152, 15, 1202, 15, xsize)
         self.linia(qp, 1152, 9, 1201, 4, xsize)
         self.linia(qp, 950, 53, 973, 50, xsize)
-
         self.linia(qp, 1167, 4, 1172, 48, xsize)
         if scaled:
             pen.setWidth(1)
@@ -482,9 +493,7 @@ class Map(QtGui.QWidget):
         # Koniec rysowania torow bez zwrotnic
 
         #rysowanie fragmentow torow ze zwrotnicami:
-        niebieski = QtGui.QColor(0, 0, 255)
-        pen.setColor(niebieski)
-        qp.setPen(pen)
+        self.BluePen(qp, pen)
         #zwrotnica nr 0
         for i in range(0,34):
             # qp.drawRect(self.rects[i])
@@ -495,173 +504,377 @@ class Map(QtGui.QWidget):
                 TF = "F"
             qp.drawText(self.rects[i].x(), self.rects[i].y(), str(i)+TF)
         if self.zwrotnice[0]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1172, 30, 1153, 26, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1172, 30, 1153, 30, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1172, 30, 1153, 30, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1172, 30, 1153, 26, xsize)
         #zwrotnica nr 1
         if self.zwrotnice[1]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 16, 26, 24, 26, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 16, 26, 24, 21, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 16, 26, 24, 21, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 16, 26, 24, 26, xsize)
         #zwrotnica nr 2
         if self.zwrotnice[2]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 16, 52, 25, 58, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 16, 52, 26, 52, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 16, 52, 26, 52, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 16, 52, 25, 58, xsize)
         #zwrotnica nr 3
         if self.zwrotnice[3]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 563, 52, 549, 57, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 563, 52, 549, 52, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 563, 52, 549, 52, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 563, 52, 549, 57, xsize)
         #zwrotnica nr 4
         if self.zwrotnice[4]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 713, 117, 720, 99, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 713, 117, 712, 104, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 713, 117, 712, 104, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 713, 117, 720, 99, xsize)
         #zwrotnica nr 5
         if self.zwrotnice[5]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 720, 99, 727, 86, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 720, 99, 720, 91, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 720, 99, 720, 91, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 720, 99, 727, 86, xsize)
         #zwrotnica nr 6 #672,507
         if self.zwrotnice[6]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 662, 504, 671, 506, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 662, 504, 671, 504, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 662, 504, 671, 504, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 662, 504, 671, 506, xsize)
         #zwrotnica nr 7
         if self.zwrotnice[7]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 680, 504, 671, 506, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 680, 504, 671, 504, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 680, 504, 671, 504, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 680, 504, 671, 506, xsize)
         #zwrotnica nr 8
         if self.zwrotnice[8]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 680, 509, 671, 506, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 680, 509, 671, 509, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 680, 509, 671, 509, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 680, 509, 671, 506, xsize)
         #zwrotnica nr 9
         if self.zwrotnice[9]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 662, 509, 671, 506, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 662, 509, 671, 509, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 662, 509, 671, 509, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 662, 509, 671, 506, xsize)
         #zwrotnica nr 10
         if self.zwrotnice[10]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 884, 47, 909, 45, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 897, 43, 909, 45, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 897, 43, 909, 45, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 884, 47, 909, 45, xsize)
         #zwrotnica nr 11
         if self.zwrotnice[11]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 885, 41, 909, 40, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 885, 41, 897, 43, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 885, 41, 897, 43, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 885, 41, 909, 40, xsize)
         #zwrotnica nr 12
         if self.zwrotnice[12]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 950, 53, 921, 52, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 950, 53, 920, 56, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 950, 53, 920, 56, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 950, 53, 921, 52, xsize)
         #zwrotnica nr 13
         if self.zwrotnice[13]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 973, 50, 993, 48, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 973, 50, 983, 46, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 973, 50, 983, 46, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 973, 50, 993, 48, xsize)
         #zwrotnica nr 14
         if self.zwrotnice[14]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 993, 42, 983, 46, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 993, 42, 972, 43, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 993, 42, 972, 43, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 993, 42, 983, 46, xsize)
         #zwrotnica nr 15
         if self.zwrotnice[15]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1009, 41, 1035, 44, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1009, 41, 1031, 38, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1009, 41, 1031, 38, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1009, 41, 1035, 44, xsize)
         #zwrotnica nr 16
         if self.zwrotnice[16]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1050, 32, 1040, 35, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1050, 32, 1031, 33, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1050, 32, 1031, 33, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1050, 32, 1040, 35, xsize)
         #zwrotnica nr 17
         if self.zwrotnice[17]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1031, 38, 1050, 38, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1031, 38, 1040, 35, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1031, 38, 1040, 35, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1031, 38, 1050, 38, xsize)
         #zwrotnica nr 18
         if self.zwrotnice[18]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1046, 22, 1077, 22, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1046, 22, 1058, 19, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1046, 22, 1058, 19, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1046, 22, 1077, 22, xsize)
         #zwrotnica nr 19
         if self.zwrotnice[19]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1070, 16, 1058, 19, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1070, 16, 1041, 16, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1070, 16, 1041, 16, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1070, 16, 1058, 19, xsize)
         #zwrotnica nr 20
         if self.zwrotnice[20]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1073, 50, 1061, 47, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1073, 50, 1050, 50, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1073, 50, 1050, 50, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1073, 50, 1061, 47, xsize)
         #zwrotnica nr 21
         if self.zwrotnice[21]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1050, 44, 1061, 47, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1050, 44, 1073, 43, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1050, 44, 1073, 43, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1050, 44, 1061, 47, xsize)
         #zwrotnica nr 22
         if self.zwrotnice[22]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1065, 32, 1080, 32, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1065, 32, 1079, 28, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1065, 32, 1079, 28, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1065, 32, 1080, 32, xsize)
         #zwrotnica nr 23
         if self.zwrotnice[23]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1091, 28, 1115, 27, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1091, 28, 1103, 25, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1091, 28, 1103, 25, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1091, 28, 1115, 27, xsize)
         #zwrotnica nr 24
         if self.zwrotnice[24]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1115, 21, 1091, 22, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1115, 21, 1103, 25, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1115, 21, 1103, 25, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1115, 21, 1091, 22, xsize)
         #zwrotnica nr 25
         if self.zwrotnice[25]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1102, 16, 1122, 16, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1102, 16, 1112, 13, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1102, 16, 1112, 13, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1102, 16, 1122, 16, xsize)
         #zwrotnica nr 26
         if self.zwrotnice[26]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1122, 10, 1100, 10, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1122, 10, 1112, 13, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1122, 10, 1112, 13, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1122, 10, 1100, 10, xsize)
         #zwrotnica nr 27
         if self.zwrotnice[27]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1152, 15, 1134, 16, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1152, 15, 1142, 13, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1152, 15, 1142, 13, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1152, 15, 1134, 16, xsize)
         #zwrotnica nr 28
         if self.zwrotnice[28]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1133, 10, 1142, 13, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1133, 10, 1152, 9, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1133, 10, 1152, 9, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1133, 10, 1142, 13, xsize)
         #zwrotnica nr 29
         if self.zwrotnice[29]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1124, 21, 1132, 24, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1124, 21, 1142, 20, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1124, 21, 1142, 20, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1124, 21, 1132, 24, xsize)
         #zwrotnica nr 30
         if self.zwrotnice[30]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1142, 26, 1132, 24, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1142, 26, 1124, 27, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1142, 26, 1124, 27, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1142, 26, 1132, 24, xsize)
         #zwrotnica nr 31
         if self.zwrotnice[31]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1143, 35, 1135, 37, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1143, 35, 1126, 35, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1143, 35, 1126, 35, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1143, 35, 1135, 37, xsize)
         #zwrotnica nr 32
         if self.zwrotnice[32]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1126, 40, 1142, 40, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1126, 40, 1135, 37, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1126, 40, 1135, 37, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1126, 40, 1142, 40, xsize)
         #zwrotnica nr 33
         if self.zwrotnice[33]:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1157, 44, 1137, 45, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1157, 44, 1142, 40, xsize)
         else:
+            self.GrayPen(qp, pen)
+            self.linia(qp, 1157, 44, 1142, 40, xsize)
+            self.BluePen(qp, pen)
             self.linia(qp, 1157, 44, 1137, 45, xsize)
 
         # Koniec rysowania torow ze zwrotnicami
@@ -761,23 +974,23 @@ class Map(QtGui.QWidget):
         rozmieszczenie na mapie balis, dodanie nastaw w razie aktywacji (-1 przy id pociagu oznacza 'kazdy')
         :return: None
         """
-        self.czujniki[0].x = 1148
-        self.czujniki[0].y = 3
+        self.czujniki[0].x = 1151
+        self.czujniki[0].y = 9
         self.czujniki[0].nr = 502
         self.czujniki[0].zone = 'W'
 
-        self.czujniki[1].x = 1031
-        self.czujniki[1].y = 5
+        self.czujniki[1].x = 1034
+        self.czujniki[1].y = 10
         self.czujniki[1].nr = 503
         self.czujniki[1].zone = 'W'
 
-        self.czujniki[2].x = 433
-        self.czujniki[2].y = 14
+        self.czujniki[2].x = 437
+        self.czujniki[2].y = 20
         self.czujniki[2].nr = 302
         self.czujniki[2].zone = 'B'
 
-        self.czujniki[3].x = 3
-        self.czujniki[3].y = 23
+        self.czujniki[3].x = 7
+        self.czujniki[3].y = 26
         self.czujniki[3].nr = 301
         self.czujniki[3].zone = 'B'
         self.czujniki[3].nastawy.append(Nastawa(1, -1, True))
@@ -785,48 +998,48 @@ class Map(QtGui.QWidget):
         self.czujniki[3].nastawy.append(Nastawa(27, -1, True))
         self.czujniki[3].nastawy.append(Nastawa(28, -1, False))
 
-        self.czujniki[4].x = 433
-        self.czujniki[4].y = 21
+        self.czujniki[4].x = 437
+        self.czujniki[4].y = 25
         self.czujniki[4].nr = 303
         self.czujniki[4].zone = 'B'
 
-        self.czujniki[5].x = 838
-        self.czujniki[5].y = 11
+        self.czujniki[5].x = 841
+        self.czujniki[5].y = 14
         self.czujniki[5].nr = 606
         self.czujniki[5].zone = 'W'
 
-        self.czujniki[6].x = 865
-        self.czujniki[6].y = 12
+        self.czujniki[6].x = 868
+        self.czujniki[6].y = 14
         self.czujniki[6].nr = 605
         self.czujniki[6].zone = 'W'
 
-        self.czujniki[7].x = 895
-        self.czujniki[7].y = 12
+        self.czujniki[7].x = 898
+        self.czujniki[7].y = 15
         self.czujniki[7].nr = 604
         self.czujniki[7].zone = 'W'
 
-        self.czujniki[8].x = 920
-        self.czujniki[8].y = 12
+        self.czujniki[8].x = 923
+        self.czujniki[8].y = 15
         self.czujniki[8].nr = 603
         self.czujniki[8].zone = 'W'
 
-        self.czujniki[9].x = 949
-        self.czujniki[9].y = 13
+        self.czujniki[9].x = 952
+        self.czujniki[9].y = 15
         self.czujniki[9].nr = 602
         self.czujniki[9].zone = 'W'
 
-        self.czujniki[10].x = 974
-        self.czujniki[10].y = 13
+        self.czujniki[10].x = 977
+        self.czujniki[10].y = 15
         self.czujniki[10].nr = 601
         self.czujniki[10].zone = 'W'
 
-        self.czujniki[11].x = 1039
-        self.czujniki[11].y = 12
+        self.czujniki[11].x = 1042
+        self.czujniki[11].y = 16
         self.czujniki[11].nr = 504
         self.czujniki[11].zone = 'W'
 
-        self.czujniki[12].x = 1165
-        self.czujniki[12].y = 11
+        self.czujniki[12].x = 1169
+        self.czujniki[12].y = 15
         self.czujniki[12].nr = 501
         self.czujniki[12].zone = 'W'
         self.czujniki[12].nastawy.append(Nastawa(27, -1, False))
@@ -834,29 +1047,29 @@ class Map(QtGui.QWidget):
         self.czujniki[12].nastawy.append(Nastawa(1, -1, False))
         self.czujniki[12].nastawy.append(Nastawa(19, -1, True))
 
-        self.czujniki[13].x = 1031
-        self.czujniki[13].y = 19
+        self.czujniki[13].x = 1035
+        self.czujniki[13].y = 22
         self.czujniki[13].nr = 104
         self.czujniki[13].aktywnyZerem = True
         self.czujniki[13].zone = 'W'
 
-        self.czujniki[14].x = 716
-        self.czujniki[14].y = 84
+        self.czujniki[14].x = 720
+        self.czujniki[14].y = 88
         self.czujniki[14].nr = 101
         self.czujniki[14].aktywnyZerem = True
         self.czujniki[14].zone = 'S'
 
-        self.czujniki[15].x = 723
-        self.czujniki[15].y = 203
+        self.czujniki[15].x = 727
+        self.czujniki[15].y = 206
         self.czujniki[15].nr = 103
         self.czujniki[15].aktywnyZerem = True
         self.czujniki[15].zone = 'S'
 
-        self.czujniki[16].x = 807
-        self.czujniki[16].y = 374
+        self.czujniki[16].x = 812
+        self.czujniki[16].y = 376
 
-        self.czujniki[17].x = 957
-        self.czujniki[17].y = 379
+        self.czujniki[17].x = 962
+        self.czujniki[17].y = 384
         self.czujniki[17].nr = 103
         self.czujniki[17].aktywnyZerem = True
         self.czujniki[17].zone = 'K'
@@ -864,59 +1077,59 @@ class Map(QtGui.QWidget):
         self.czujniki[17].nastawy.append(Nastawa(7, -1, True))
 
 
-        self.czujniki[18].x = 624
-        self.czujniki[18].y = 499
+        self.czujniki[18].x = 627
+        self.czujniki[18].y = 504
         self.czujniki[18].nr = 102
         self.czujniki[18].aktywnyZerem = True
         self.czujniki[18].zone = 'K'
         self.czujniki[18].nastawy.append(Nastawa(6, -1, False))
         self.czujniki[18].nastawy.append(Nastawa(8, -1, False))
 
-        self.czujniki[19].x = 708
-        self.czujniki[19].y = 98
+        self.czujniki[19].x = 711
+        self.czujniki[19].y = 101
         self.czujniki[19].nr = 102
         self.czujniki[19].aktywnyZerem = True
         self.czujniki[19].zone = 'S'
 
 
-        self.czujniki[20].x = 535
-        self.czujniki[20].y = 47
+        self.czujniki[20].x = 538
+        self.czujniki[20].y = 52
 
-        self.czujniki[21].x = 3
-        self.czujniki[21].y = 48
+        self.czujniki[21].x = 7
+        self.czujniki[21].y = 52
         self.czujniki[21].nr = 313
         self.czujniki[21].zone = 'B'
 
-        self.czujniki[22].x = 535
-        self.czujniki[22].y = 55
+        self.czujniki[22].x = 538
+        self.czujniki[22].y = 57
 
-        self.czujniki[23].x = 1164
-        self.czujniki[23].y = 41
+        self.czujniki[23].x = 1169
+        self.czujniki[23].y = 44
         self.czujniki[23].nr = 101
         self.czujniki[23].aktywnyZerem = True
         self.czujniki[23].zone = 'W'
 
-        self.czujniki[24].x = 1000
-        self.czujniki[24].y = 45
+        self.czujniki[24].x = 1003
+        self.czujniki[24].y = 48
         self.czujniki[24].nr = 106
         self.czujniki[24].aktywnyZerem = True
         self.czujniki[24].zone = 'W'
 
-        self.czujniki[25].x = 962
-        self.czujniki[25].y = 47
+        self.czujniki[25].x = 965
+        self.czujniki[25].y = 51
         self.czujniki[25].nr = 108
         self.czujniki[25].aktywnyZerem = True
         self.czujniki[25].zone = 'W'
 
-        self.czujniki[26].x = 917
-        self.czujniki[26].y = 54
+        self.czujniki[26].x = 920
+        self.czujniki[26].y = 56
         self.czujniki[26].nr = 109
         self.czujniki[26].aktywnyZerem = True
         self.czujniki[26].zone = 'W'
         self.czujniki[26].nastawy.append(Nastawa(12, -1, True))
 
-        self.czujniki[27].x = 732
-        self.czujniki[27].y = 200
+        self.czujniki[27].x = 733
+        self.czujniki[27].y = 205
         self.czujniki[27].nr = 104
         self.czujniki[27].aktywnyZerem = True
         self.czujniki[27].zone = 'S'
@@ -928,38 +1141,40 @@ class Map(QtGui.QWidget):
         self.czujniki[27].nastawy.append(Nastawa(17, -1, False))
         self.czujniki[27].nastawy.append(Nastawa(31, -1, True))
 
-        self.czujniki[28].x = 815
-        self.czujniki[28].y = 369
+        self.czujniki[28].x = 818
+        self.czujniki[28].y = 374
         self.czujniki[28].nr = 0
         self.czujniki[28].zone = 'S'
 
-        self.czujniki[29].x = 963
-        self.czujniki[29].y = 386
+        self.czujniki[29].x = 965
+        self.czujniki[29].y = 388
         self.czujniki[29].nr = 104
         self.czujniki[29].aktywnyZerem = True
         self.czujniki[29].zone = 'K'
 
-        self.czujniki[30].x = 624
-        self.czujniki[30].y = 508
+        self.czujniki[30].x = 627
+        self.czujniki[30].y = 510
         self.czujniki[30].nr = 101
         self.czujniki[30].aktywnyZerem = True
         self.czujniki[30].zone = 'K'
-        self.czujniki[31].x = 917
-        self.czujniki[31].y = 47
+
+        self.czujniki[31].x = 920
+        self.czujniki[31].y = 52
         self.czujniki[31].nr = 110
         self.czujniki[31].aktywnyZerem = True
         self.czujniki[31].zone = 'W'
-        self.czujniki[32].x = 1033
-        self.czujniki[32].y = 41
+
+        self.czujniki[32].x = 1037
+        self.czujniki[32].y = 44
         self.czujniki[32].nr = 105
         self.czujniki[32].aktywnyZerem = True
         self.czujniki[32].zone = 'W'
 
-        self.czujniki[33].x = 1075
-        self.czujniki[33].y = 34
+        self.czujniki[33].x = 1079
+        self.czujniki[33].y = 37
 
-        self.czujniki[34].x = 1180
-        self.czujniki[34].y = 33
+        self.czujniki[34].x = 1183
+        self.czujniki[34].y = 35
         self.czujniki[34].nr = 102
         self.czujniki[34].aktywnyZerem = True
         self.czujniki[34].zone = 'W'
@@ -974,14 +1189,14 @@ class Map(QtGui.QWidget):
         self.czujniki[34].nastawy.append(Nastawa(5, -1, False))
         self.czujniki[34].nastawy.append(Nastawa(4, -1, False))
 
-        self.czujniki[35].x = 1037
-        self.czujniki[35].y = 32
+        self.czujniki[35].x = 1040
+        self.czujniki[35].y = 35
         self.czujniki[35].nr = 307
         self.czujniki[35].aktywnyZerem = True
         self.czujniki[35].zone = 'W'
 
-        self.czujniki[36].x = 1180
-        self.czujniki[36].y = 24
+        self.czujniki[36].x = 1183
+        self.czujniki[36].y = 30
         self.czujniki[36].nr = 301
         self.czujniki[36].aktywnyZerem = True
         self.czujniki[36].zone = 'W'
@@ -990,14 +1205,14 @@ class Map(QtGui.QWidget):
         self.czujniki[36].nastawy.append(Nastawa(16, 3, True))
         self.czujniki[36].nastawy.append(Nastawa(11, 3, False))
 
-        self.czujniki[37].x = 1082
-        self.czujniki[37].y = 29
+        self.czujniki[37].x = 1084
+        self.czujniki[37].y = 32
         self.czujniki[37].nr = 305
         self.czujniki[37].aktywnyZerem = True
         self.czujniki[37].zone = 'W'
 
-        self.czujniki[38].x = 1026
-        self.czujniki[38].y = 28
+        self.czujniki[38].x = 1030
+        self.czujniki[38].y = 33
         self.czujniki[38].nr = 308
         self.czujniki[38].aktywnyZerem = True
         self.czujniki[38].zone = 'W'
@@ -1006,26 +1221,26 @@ class Map(QtGui.QWidget):
         self.czujniki[38].nastawy.append(Nastawa(23, 3, True))
         self.czujniki[38].nastawy.append(Nastawa(24, 3, True))
 
-        self.czujniki[39].x = 968
-        self.czujniki[39].y = 39
+        self.czujniki[39].x = 971
+        self.czujniki[39].y = 43
         self.czujniki[39].nr = 309
         self.czujniki[39].aktywnyZerem = True
         self.czujniki[39].zone = 'W'
 
-        self.czujniki[40].x = 1074
-        self.czujniki[40].y = 24
+        self.czujniki[40].x = 1077
+        self.czujniki[40].y = 29
         self.czujniki[40].nr = 306
         self.czujniki[40].aktywnyZerem = True
         self.czujniki[40].zone = 'W'
 
-        self.czujniki[41].x = 1098
-        self.czujniki[41].y = 21
+        self.czujniki[41].x = 1101
+        self.czujniki[41].y = 25
         self.czujniki[41].nr = 304
         self.czujniki[41].aktywnyZerem = True
         self.czujniki[41].zone = 'W'
 
-        self.czujniki[42].x = 1139
-        self.czujniki[42].y = 17
+        self.czujniki[42].x = 1141
+        self.czujniki[42].y = 20
         self.czujniki[42].nr = 302
         self.czujniki[42].aktywnyZerem = True
         self.czujniki[42].zone = 'W'
@@ -1033,19 +1248,19 @@ class Map(QtGui.QWidget):
         self.czujniki[42].nastawy.append(Nastawa(24, 3, False))
         self.czujniki[42].nastawy.append(Nastawa(18, 3, False))
 
-        self.czujniki[43].x = 1129
-        self.czujniki[43].y = 20
+        self.czujniki[43].x = 1131
+        self.czujniki[43].y = 24
         self.czujniki[43].nr = 303
         self.czujniki[43].aktywnyZerem = True
         self.czujniki[43].zone = 'W'
 
-        self.czujniki[44].x = 443
-        self.czujniki[44].y = 28
+        self.czujniki[44].x = 437
+        self.czujniki[44].y = 32
         self.czujniki[44].nr = 101
         self.czujniki[44].zone = 'B'
 
-        self.czujniki[45].x = 433
-        self.czujniki[45].y = 35
+        self.czujniki[45].x = 437
+        self.czujniki[45].y = 38
         self.czujniki[45].nr = 102
         self.czujniki[45].zone = 'B'
 
