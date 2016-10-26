@@ -1,0 +1,100 @@
+Zachowanie poci¹gu:
+-pola: obecna strefa, nastêpna strefa, trasa, indeks strefy na trasie, lista zmian kierunków ruchu, kierunek ruchu
+-przy wjeŸdzie:
+	+ aktualizacja obecnej strefy
+	+ aktualizacja kolejnej strefy
+	+ sprawdziæ kolejny odcinek trasy (pole klasy poci¹gu) i ustawiæ zwrotnice tak, aby przejechaæ
+	+ sprawdzenie, na jak d³ugo mam siê zatrzymaæ w tej strefie (jeœli 0 to jadê dalej, inaczej stop)
+	+ sprawdzenie zajêtoœci nastêpnej strefy
+	+ sprawdzenie obecnej strefy pod k¹tem zajêtoœci s¹siednich stref
+
+ZMIANY KIERUNKU S¥ WYKONYWANE W FUNKCJI WYWO£UJ¥CEJ POSTÓJ, WIÊC ¯EBY ZMIENIÆ KIERUNEK NALE¯Y SIÊ ZATRZYMAÆ W DANEJ STREFIE
+
+Strefa:
+-klasa, pola: nr_strefy, lista s¹siednich stref, do których trzeba ustawiæ zwrotnice i zwrotnic do przestawienia, lista stref do sprawdzenia pod k¹tem zajêtoœci, wjedŸ powoli (jeœli ta strefa jest stref¹ nastêpn¹, to ustaw prêdkoœæ na minimaln¹)
+
+PRZY SPRAWDZANIU ZAJÊTOŒCI W STREFIE, JEŒI JEST ZAJÊTA, TO SIÊ ZATRZYMUJEMY. NATOMIAST KIEDY SIÊ ZWOLNI CZEKAMY LOSOW¥ ILOŒÆ CZASU OD 1 SEKUNDY DO 3 SEKUND, SPRAWDZAMY ZAJÊTOŒÆ TORU - JEŒLI JEST WOLNY TO USTAWIAMY ZWROTNICE I JEDZIEMY
+
+Pole trasa:
+-lista list
+-pojedynczy element listy list: [numer strefy, czas postoju]
+
+Trasy konkretnych poci¹gów:
+
+Pierwszy (zaczyna z Wrzeszcza) wrzeszcz - stzy¿a - kie³pinek i z powrotem, zmieniaj¹c tor
+[[23,0],[30,0],[24,0],[26,0],[20,0],[8,0],[9,0],[12,15],[13,0],[14,0],[15,0],[16,15],[17,0],[18,0],[29,0],[19,15],[22,0],[21,0],[26,0],[25,0],[30,0],[23,15]]
+
+[[23,'p'],[16,'t']]
+
+Drugi (zaczyna z Kie³pinka) wrzeszcz - stzy¿a - kie³pinek i z powrotem, zmieniaj¹c tor
+[[16,0],[17,0],[18,0],[29,0],[19,15],[22,0],[21,0],[26,0],[25,0],[30,0],[23,15],[30,0],[24,0],[26,0],[20,0],[8,0],[9,0],[12,15],[13,0],[14,0],[15,0],[16,15]]
+
+[[23,'t'],[16,'p']]
+
+wrzeszcz - osowa - wrzeszcz - kie³pinek - osowa - wrzeszcz
+[[6,0],[28,0],[7,0],[8,0],[9,1],[10,0],[11,15],[10,0],[9,0],[12,15],[13,0],[14,0],[15,0],[16,15],[17,0],[18,0],[29,0],[19,15],[22,0],[21,0],[26,0],[27,0],[28,0],[6,1],[28,0],[7,0],[8,0],[9,1],[10,0],[11,15],[10,0],[9,1],[8,0],[7,0],[28,0],[6,15]]
+
+[[6,'p'],[16,'t'],[9,'t'],[11,'p']]
+
+osowa - wrzeszcz - osowa
+
+[[1,0],[2,0],[3,15],[4,1],[5,0],[1,15]]
+
+[[1,'p'],[4,'t']]
+
+Listy zajêtoœci stref
+
+1-6 brak
+7 [8,20]
+8 [[9,12]]
+9 [12]
+10 [8]
+11-13 brak
+14 [[15,16]]
+15 [16]
+16,17 brak
+18 [[29,19]]
+19 brak
+20 [8]
+21 [26,24]
+22 [21]
+23 [30,24]
+24 [26,21]
+25 [30,23]
+26 brak
+27 brak
+28 brak
+29 [19]
+30 brak
+
+Listy przejœcia stref
+1 brak
+2 [[3,[501, 'l'], [505,'p']]]
+3 [[4,[507,'p']]]
+4 [[5,[507,'l']]]
+5 [[1,[504,'p'], [503,'p']]]
+6 brak
+7 [[8,[101,'l']]]
+8 [[9,[102,'p']],[10,[102,'l']]]
+9 brak
+10 [[11,[313,'l']]]
+11 brak
+12 brak
+13 brak
+14 brak
+15 [[16,[2,'l'], [12,'l']]]
+16 [[16,[1,'p'], [12,'p']]]
+17 brak
+18 brak
+19 brak
+20 brak
+21 [[26,[111,'l']]]
+22 brak
+23 brak
+24 [[26,[107,'p']]]
+25 [[30,[105,'l']]]
+26 [[20,[108,'p'],[109,'l'],[110,'l'],[111,'p']],[25,[110,'p']],[27,[108,'l'],[308,'l'],[307,'l'],[109,'l'],[110,'l'],[111,'p']]]
+27 [[28,[306,'l'],[306,'l'],[304,'l'],[303,'l']]]
+28 [[7,[303,'l'],[304,'p'],[309,'p']]]
+29 brak
+30 [[23,[101,'l']],[24,[101,'p'],[102,'p']]]
