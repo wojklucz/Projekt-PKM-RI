@@ -84,6 +84,7 @@ class TrainCommunicator(object):
     def resume_operations_request(self):
         cmd = "2181"
         self.send_data(cmd)
+        self.connection.recv(64) # workaround
 
     def emergency_off(self):
         cmd = "2180"
@@ -248,9 +249,9 @@ if __name__ == '__main__':
     kom.connect('192.168.0.200', 5550)
     train = 3
     kom.set_speed_direction(train,127,1)
-    sleep(5)
+    sleep(1)
     kom.set_speed_direction(train,0,0)
-    sleep(5)
-    kom.set_speed_direction(train,127,1)
-    sleep(5)
+    sleep(1)
+    kom.set_speed_direction(train,127,0)
+    sleep(1)
     kom.set_speed_direction(train,0,0)
