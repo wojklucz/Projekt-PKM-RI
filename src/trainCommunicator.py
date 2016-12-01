@@ -1,5 +1,6 @@
 import socket
 import binascii
+import logging
 
 from time import sleep
 
@@ -20,7 +21,7 @@ class TrainCommunicator(object):
               """
         assert isinstance(self.connection,socket.socket)    #check if socket is set
         xor = self.calculate_checksum(msg)                  #calculate cheksum byte
-        print "Sending: " + str(msg) + " XOR: " + str(xor)
+        logging.debug("Sending: " + str(msg) + " XOR: " + str(xor))
         msg += xor                                     #append XOR byte
         msg = "fffe" + msg                             #add header
         msg = binascii.unhexlify(msg)                  #convert to raw data
@@ -30,13 +31,13 @@ class TrainCommunicator(object):
         response = response[4:]                        #strip header
         xor = response[-2:]                            #get cheksum
         response = response [:-2]                      #strip chekscum
-        print "Recieved: " + response + " XOR: " + str(xor)
+        logging.debug("Recieved: " + response + " XOR: " + str(xor))
         if self.calculate_checksum(response) != xor:   #check if cheksum ok
             raise Exception("Communication error: BAD CHEKSUM")
         else:
-            print "Cheksum OK"
+            logging.debug("Cheksum OK")
 
-    def connect(self, ip, port):
+    def connect(self, ip='192.168.0.200', port=5550):
         """Connect with the command station
               Args:
                   ip: Command station ip
@@ -83,6 +84,7 @@ class TrainCommunicator(object):
     def resume_operations_request(self):
         cmd = "2181"
         self.send_data(cmd)
+        self.connection.recv(64) # workaround
 
     def emergency_off(self):
         cmd = "2180"
@@ -113,8 +115,6 @@ class TrainCommunicator(object):
             loco = "0" + hex(loco)[2:]
         else:
             loco = hex(loco)[2:]
-        print loco
-        print "Speed: " + speed
         cmd = "e41300" + loco + predkosci[speed]
         self.send_data(cmd)
 
@@ -131,6 +131,27 @@ class TrainCommunicator(object):
             loco = hex(loco)[2:]
         cmd = "e41300" + loco + speed
         self.send_data(cmd)
+
+    def set_speed_direction(self,loco,speed,dir):
+        """
+        Function for setting locomotive speed with specified directin
+        :param loco: id of locomotive to set speed
+        :param speed: int 0-127: value of speed
+        :param dir: int 0-1: value of direction, 0-forward, 1-backwards
+        :return: None
+        """
+        assert(speed < 128 and speed >= 0)
+        assert(dir in (0,1))
+        if loco < 16:
+            loco = "0" + hex(loco)[2:]
+        else:
+            loco = hex(loco)[2:]
+        speed = hex(dir*128+speed)[2:]
+        if len(speed) == 1:
+            speed = "0" + speed
+        cmd = "e41300" + loco + speed
+        self.send_data(cmd)
+
 
     def add_a_locomotive_to_a_multi_unit_request(self, loco):
         if loco < 16:
@@ -226,8 +247,11 @@ if __name__ == '__main__':
     #short test moving train 2 back and forth
     kom = TrainCommunicator()
     kom.connect('192.168.0.200', 5550)
-    kom.set_speed(2,"tyl")
-    sleep(5)
-    kom.set_speed(2,"przod")
-    sleep(5)
-    kom.set_speed(2,"stop")
+    train = 3
+    kom.set_speed_direction(train,127,1)
+    sleep(1)
+    kom.set_speed_direction(train,0,0)
+    sleep(1)
+    kom.set_speed_direction(train,127,0)
+    sleep(1)
+    kom.set_speed_direction(train,0,0)
